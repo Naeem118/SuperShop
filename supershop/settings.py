@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'supershop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'supershop',
+        'USER':'shop',
+        'PASSWORD':'shop',
+        'HOST':'localhost',
+        'PORT':'3306',
     }
 }
 
@@ -118,4 +122,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+# Media settings
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+
+
+# Message Settings
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',  # This means for any error we will use 'danger' class of bootstrap
+}
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Expire session after 30 minutes of initialization
+SESSION_COOKIE_AGE = 30 * 60 

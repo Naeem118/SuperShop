@@ -1,0 +1,272 @@
+a{
+    text-decoration: none;
+}
+
+.featured-product.content-area{
+    background: rgba(0, 0, 0, 0.04) url(../images/bg-img-6.png) top left repeat;
+    background-size: cover;
+    width: 100%;
+    padding: 100px 0 70px;
+}
+
+/** Content area srart **/
+.content-area {
+    padding: 100px 0 70px;
+}
+
+/** Main title start **/
+.main-title {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.main-title h1 {
+    font-size: 33px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.main-title p{
+    font-size: 17px;
+    margin-bottom: 0;
+}
+
+/** Property box start **/
+.product-box {
+    position: relative;
+    margin-bottom: 30px;
+    background: #fff;
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.1);
+    z-index: 9;
+    border-radius: 5px;
+}
+
+.product-box img{
+    border-radius: 5px;
+}
+
+.product-box .detail .title {
+    font-size: 23px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.product-box .detail .title a:hover {
+    color: #343a40;
+}
+
+.product-box .detail .location {
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.product-box .detail .location a{
+    color: #5f5e5e;
+}
+
+.product-box .detail{
+    padding: 25px 20px 10px;
+}
+
+.product-box .facilities-list {
+    position: absolute;
+    bottom: 0;
+    font-size: 15px;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.36);
+}
+
+.product-box .footer {
+    border-top: 1px solid #e5e5e5;
+    background: #fff;
+    font-size: 14px;
+}
+
+.product-box .footer .ratings {
+    font-size: 15px;
+    color: orange;
+}
+
+.product-box .footer {
+    color: #535353;
+    font-size: 15px;
+    border-top: solid 1px #efefef;
+}
+
+.product-box .footer .price{
+    font-weight: 600;
+    font-size: 18px;
+    padding-right: 20px;
+    margin-bottom: 0;
+    line-height: 49px;
+}
+
+.product-box .days{
+    line-height: 49px;
+    padding-left: 20px;
+}
+
+.product-box .facilities-list li {
+    list-style: none;
+    float: left;
+    width: 28.33%;
+    font-weight: 400;
+    font-size: 15px;
+    color: #fff;
+    text-align: center;
+}
+
+.product-box .facilities-list li span i{
+    margin-right: 5px;
+}
+
+.product-box .footer .producttype{
+    font-weight: 600;
+    font-size: 18px;
+    padding-right: 20px;
+    margin-bottom: 0;
+    line-height: 49px;
+    color: #178bd3;
+}
+
+.product-thumbnail {
+    position: relative;
+}
+
+.product-thumbnail:before {
+    content: "";
+    top: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 8;
+    background: linear-gradient(to top,rgba(47, 45, 45, 0.9) 0%,rgba(0, 0, 0, 0.45) 35%,rgba(2, 2, 2, 0) 60%,rgba(0,0,0,0) 100%);
+    border-radius: 4px 4px 0 0;
+    opacity: 1;
+}
+
+.product-thumbnail:hover > .productbox-overlap-wrapper {
+    visibility: visible;
+    top: 0;
+    cursor: pointer;
+    transition: all .15s linear;
+}
+
+/** Tag start**/
+.tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 20;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #fff;
+    background: #178bd3;
+    padding: 7px 14px 5px;
+    font-weight: 500;
+    border-radius: 3px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.productbox-overlap-wrapper {
+    visibility: hidden;
+    background: rgba(0, 0, 0, 0.6);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    z-index: 998;
+    color: #FFF;
+    left: 0;
+    top: 0;
+}
+
+.overlap-box{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.overlap-btns-area img{
+    display: none;
+}
+
+.product-magnify-gallery {
+    display: inline-block;
+}
+
+.overlap-btn {
+    border: solid 1px #fff;
+}
+
+.overlap-btn {
+    width: 36px;
+    height: 36px;
+    line-height: 35px;
+    display: inline-block;
+    color: #FFF;
+    margin: 16px 2px;
+    border-radius: 3px;
+    font-size: 13px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.overlap-btn:hover {
+    text-decoration: none;
+    color: #FFF;
+    -o-transition: .5s;
+    -ms-transition: .5s;
+    -moz-transition: .5s;
+    -webkit-transition: .5s;
+    /* ...and now for the proper property */
+    transition: .5s;
+}
+
+.title-p{
+    color: teal;
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+    .m-hide{
+        display: none;
+    }
+
+    .content-area {
+        padding: 80px 0 50px;
+    }
+
+    .main-title {
+        margin-bottom: 40px;
+    }
+
+    .main-title h1 {
+        font-size: 30px;
+        margin-bottom: 7px;
+    }
+
+    .main-title p {
+        line-height:26px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        padding: 60px 0 30px;
+    }
+
+    .main-title h1 {
+        font-size: 27px;
+    }
+
+    .main-title {
+        margin-bottom: 30px;
+    }
+}

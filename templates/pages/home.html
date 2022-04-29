@@ -97,72 +97,53 @@
                 <p class="title-p">Allow us to guide you through the innovative stress
                     free approach in finding your products.</p>
             </div>
-            <div class="row">
-                {% comment %} {% for product in all_products %} {% endcomment %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="product-box">
-                        <div class="product-thumbnail">
-                            <a href="#" class="product-img">
-                                <div class="tag">{{ offer_pct }}% OFF</div>
-                                {% for photo in photos %}
-                                    {% if forloop.first %}
-                                        <img class="d-block w-100" src="{{ photo }}" alt="product" style="min-height: 262px; max-height:262px;">
-                                    {% endif %}
-                                {% endfor %}
-                                <div class="facilities-list clearfix">
-                                    <ul>
-                                        <li>
-                                            <span><i class="flaticon-way"></i></span>Stock: {{ stock_quantity | intcomma }}
-                                        </li>
-                                        <li>
-                                            <span><i class="flaticon-calendar-1"></i></span>  
-                                        </li>
-                                        <li>
-                                            <span><i class="flaticon-manual-transmission"></i></span>Rating: {{ rating }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </a>
-                            <div class="productbox-overlap-wrapper">
-                                <div class="overlap-box">
-                                    <div class="overlap-btns-area">
-                                        <div class="product-magnify-gallery">
-                                            {% for photo in photos %}
-                                                {% if forloop.first %}
-                                                    <a href="{{ photo }}" class="overlap-btn">
-                                                        <i class="fa fa-expand"></i>
-                                                        <img class="hidden" src="{{ photo }}">
-                                                    </a>
-                                                {% else %}
-                                                    <a href="{{ photo }}" class="hidden">
-                                                        <img class="hidden" src="{{ photo }}">
-                                                    </a>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
+            <div class="row g-3 justify-content-center" product-cards-container>
+                <template product-card-template>
+                    <div class="p-2 col-12 col-md-4 col-lg-3">
+                        <div class="card product-card">
+                            <div class="bg-image">
+                                <div id="" class="carousel slide carousel-fade" data-interval="false" carousel-slide>
+                                    <div class="carousel-indicators" indicators-container>
+                                        <template indicator-template>
+                                            <button type="button" data-bs-target="" data-bs-slide-to="" class="" aria-current="" aria-label="" indicator-button></button>
+                                        </template>
                                     </div>
+                                    <div class="carousel-inner carousel-height-15" card-image-container>
+                                        <template product-image-template>
+                                            <div class="carousel-item product-card-carousel">
+                                                <img class="d-block w-100 img-fluid" alt="product photo" product-image>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="detail">
-                            <h1 class="title">
-                                <a href="#" style="color: #178bd3;">{{ name }}</a>
-                            </h1>
-                        </div>
-                        <div class="footer clearfix">
-                            <div class="pull-left ratings days">
-                                <p class="producttype"></p>
-                            </div>
-                            <div class="pull-right">
-                                <p class="price">Tk. {{ price | intcomma }}/{{ unit }}</p>
+                            <div class="card-body" card-body>
+                                <div class="card-title d-flex justify-content-between">
+                                    <h6 class="productname" product-name></h6>
+                                    <span class="productprice" price-range></span>
+                                </div>
+ 
+                                <h6 class="card-text productstock pull-left" product-stock></h6>
+                                <h6 class="card-text productstock pull-right" product-rating></h6>
                             </div>
                         </div>
-                    </div>
-                </div>
-                {% comment %} {% endfor %} {% endcomment %}
+                    </div> 
+                </template>
             </div>
         </div>
     </div>
-
+ 
     <!-- ========================= SECTION  END// ========================= -->
 {% endblock content %}
+ 
+{% block includejs %}
+    <script src="{% static 'js/productscript.js' %}" defer></script>
+{% endblock includejs %}

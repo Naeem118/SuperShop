@@ -1,0 +1,256 @@
+{% extends 'base/base.html' %} 
+{% block content %}
+
+{% load humanize %}
+{% load static %}
+  {% comment %} <section class="section-content padding-y bg">
+    <div class="container">
+      <div class="card">
+        <div class="row no-gutters">
+          <aside class="col-md-6">
+            <article class="gallery-wrap">
+              <div class="img-big-wrap">
+                <a href="#"><img src="./images/items/12.jpg" /></a>
+              </div>
+            </article>
+          </aside>
+          <main class="col-md-6 border-left">
+            <article class="content-body">
+              <h2 class="title">{{ product_name }}</h2>
+
+              <div class="mb-3">
+                <var class="price h4">{{ product_price }}</var>
+              </div>
+
+              <p>
+                {{ product_desc }}
+              </p>
+
+              <hr />
+              <div class="row">
+                <div class="item-option-select">
+                  <h6>Choose Color</h6>
+                  <div
+                    class="btn-group btn-group-sm btn-group-toggle"
+                    data-toggle="buttons"
+                  >
+                    <label class="btn btn-light">
+                      <input type="radio" name="radio_color" /> Silver
+                    </label>
+                    <label class="btn btn-light">
+                      <input type="radio" name="radio_color" /> Gray
+                    </label>
+                    <label class="btn btn-light active">
+                      <input type="radio" name="radio_color checked" /> Gold
+                    </label>
+                    <label class="btn btn-light">
+                      <input type="radio" name="radio_color" /> Black
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="item-option-select">
+                  <h6>Select Size</h6>
+                  <div
+                    class="btn-group btn-group-sm btn-group-toggle"
+                    data-toggle="buttons"
+                  >
+                    <label class="btn btn-light">
+                      <input type="radio" name="radio_color" /> S
+                    </label>
+                    <label class="btn btn-light active">
+                      <input type="radio" name="radio_color" checked /> M
+                    </label>
+                    <label class="btn btn-light">
+                      <input type="radio" name="radio_color" /> L
+                    </label>
+                    <label class="btn btn-light">
+                      <input type="radio" name="radio_color" /> XL
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <a href="./product-detail.html" class="btn btn-primary">
+                <span class="text">Add to cart</span>
+                <i class="fas fa-shopping-cart"></i>
+              </a>
+            </article>
+          </main>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="row">
+        <div class="col-md-9">
+          <header class="section-heading">
+            <h3>Customer Reviews</h3>
+          </header>
+
+          <article class="box mb-3">
+            <div class="icontext w-100">
+              <img
+                src="./images/avatars/avatar1.jpg"
+                class="img-xs icon rounded-circle"
+              />
+              <div class="text">
+                <span class="date text-muted float-md-right">24.04.2020 </span>
+                <h6 class="mb-1">Mike John</h6>
+              </div>
+            </div>
+            <div class="mt-3">
+              <p>
+                Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing
+                elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+                aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section> {% endcomment %}
+
+
+    <div class="car-details-page content-area-6">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-8 col-md-12 col-xs-12">
+                  <div class="car-details-section">
+                      <!-- Heading start -->
+                      <div class="heading-car clearfix">
+                          <div class="pull-left">
+                              <h3>{{ product.PRODUCT_NAME }}</h3>
+                              <h6>
+                                <i class="fa fa-list-alt" aria-hidden="true"></i> {{ product_category }}
+                              </h6>
+                          </div>
+                          <div class="pull-right">
+                              <h3><span>{{ product_price | intcomma }}</span></h3>
+                          </div>
+                      </div>
+                      <div id="productDetailsSlider" class="carousel car-details-sliders slide mb-40">
+                          <!-- main slider carousel items -->
+                          <div class="carousel-inner">
+                            {% for photo in photos %}
+                                {% if forloop.first %}
+                                    <div class="active item carousel-item" data-slide-number="{{ forloop.counter0 }}">
+                                        <center><img src="{{ photo }}" class="img-fluid" alt="slider-product"></center>
+                                    </div>
+                                {% else %}
+                                    <div class="item carousel-item" data-slide-number="{{ forloop.counter0 }}">
+                                        <center><img src="{{ photo }}" class="img-fluid" alt="slider-product"></center>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                          </div>
+                          <!-- main slider carousel nav controls -->
+                          <div class="carousel-indicators-section clearfix">
+                              <ul class="carousel-indicators car-properties list-inline nav nav-justified" style="background: whitesmoke;">
+                                {% for photo in photos %}
+                                  {% if forloop.first %}
+                                      <li class="list-inline-item active">
+                                          <a id="carousel-selector-{{ forloop.counter0 }}" class="selected" data-slide-to="{{ forloop.counter0 }}" data-target="#productDetailsSlider">
+                                              <img src="{{ photo }}" class="img-fluid" alt="small-product">
+                                          </a>
+                                      </li>
+                                  {% else %}
+                                      <li class="list-inline-item">
+                                          <a id="carousel-selector-{{ forloop.counter0 }}" data-slide-to="{{ forloop.counter0 }}" data-target="#productDetailsSlider">
+                                              <img src="{{ photo }}" class="img-fluid" alt="small-product">
+                                          </a>
+                                      </li>
+                                  {% endif %}
+                                {% endfor %}
+                              </ul>
+                          </div>
+                      </div>
+
+                      <!-- Tabbing box start -->
+                      <div class="tabbing tabbing-box mb-40">
+                          <ul class="nav nav-tabs" id="carTab" role="tablist">
+                              <li class="nav-item">
+                                  <a class="nav-link active show" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="one" aria-selected="false">Product overview</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="two" aria-selected="false" style="color: #212121;"> Reviews </a>
+                              </li>
+                          </ul>
+                          <div class="tab-content" id="carTabContent">
+                              <div class="tab-pane fade active show" id="one" role="tabpanel" aria-labelledby="one-tab">
+                                  <div class="car-description mb-50">
+                                      <h3 class="heading-2">
+                                          Description
+                                      </h3>
+                                      <p style="font-size: 18px;">
+                                          {{ product.DESCRIPTION }}
+                                      </p>
+                                  </div>
+                              </div>
+                              <div class="tab-pane fade" id="two" role="tabpanel" aria-labelledby="two-tab">
+                                <div class="features-info mb-50">
+                                    <h3 class="heading-2">Reviews</h3>
+                                    <div id="reviews" class="row">
+                                      {% if reviews %}
+                                        {% for review in reviews %}
+                                            <div class="col-6">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="house-owner-profile-pic-container flex-shrink-0">
+                                                        {% if review.PROFILE_PIC %}
+                                                            <img src="{{ review.PROFILE_PIC }}">
+                                                        {% else %}
+                                                            <img src="{% static 'images/profile_pic_thumbnail.png' %}">
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-3"><b>{{ review.FIRST_NAME }}</b><br>
+                                                        <small class="text-muted">{{ review.REVIEW_DATE | date:"d M, Y" }}</small>
+                                                    </div> 
+                                                </div>
+                                                <p>
+                                                    {{ review.REVIEW }}
+                                                </p>
+                                            </div>
+                                        {% endfor %}
+                                      {% else %}
+                                            <p>No Reviews!!</p>
+                                      {% endif %}
+                                    </div>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-4 col-md-12">
+                  <div class="sidebar-right">
+                      <!-- Advanced search start -->
+                      <div class="widget advanced-search d-none-992">
+                          <h3 class="sidebar-title searchRefine">Refine Your Search</h3>
+                          <ul>
+                              <li>
+                                  <span>In Stock:</span>{{ product_stock }}
+                              </li>
+                              <li>
+                                  <span>Offer:</span>{{ product.OFFER_PCT }}% OFF
+                              </li>
+                              <li>
+                                  <span>Rating:</span>{{ product.PRODUCT_RATING }}
+                              </li>
+                              <li>
+                                  <span>Expire Date:</span>{{ product.EXPIRE_DATE }}
+                              </li>
+                          </ul>
+                      </div>
+                      <a href="./product-detail.html" class="btn btn-block btn-theme btn-primary">
+                        <span class="text">Add to cart</span>
+                        <i class="fas fa-shopping-cart"></i>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+{% endblock content %}

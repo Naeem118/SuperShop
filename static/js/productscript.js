@@ -15,7 +15,7 @@ if(!window.location.href.includes('yourproducts')){
             const priceRange = card.querySelector("[price-range]")
             const stock = card.querySelector("[product-stock]")
             const rating = card.querySelector("[product-rating]")
- 
+            const offer = card.querySelector("[product-offer]")
             /** Taking the image template of a single card */
             const cardImageContainer = card.querySelector("[card-image-container]")
             const imageTemplate = card.querySelector("[product-image-template]")
@@ -28,6 +28,7 @@ if(!window.location.href.includes('yourproducts')){
             title.textContent = product.PRODUCT_NAME
             stock.textContent = 'In Stock: ' + product.STOCK_QUANTITY
             rating.textContent = 'Rating: ' + product.PRODUCT_RATING
+            offer.textContent = product.OFFER_PCT + '% OFF'
             let unit=''
             if(product.UNIT_ID==1){
                 unit='kg'

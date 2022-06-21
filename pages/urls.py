@@ -8,4 +8,5 @@ urlpatterns = [
     path('',views.home,name='home'),
     path('productsdata/', views.getJsonProductsData, name='productsdata'),
     path('productPhotosPath/<int:product_id>/', views.getJsonProductPhotosPath, name='productPhotosPath'),
+     path('product-detail/<int:product_id>', views.product_detail, name='product-detail'),
 ]

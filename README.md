@@ -12,7 +12,7 @@ A website built with django and Mysql database
 
 # For Running This project Use:
  - python manage.py runserver
- Team Members
+ **Team Members**
 ---------------
 1. **Golam Mostofa Naeem**             
   Department of Computer Science and Engineering

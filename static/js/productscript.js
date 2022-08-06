@@ -1,9 +1,10 @@
 const productCardsContainer = document.querySelector("[product-cards-container]")
 const productCardTemplate = document.querySelector("[product-card-template]")
- 
+
 let products = []
- 
-if(!window.location.href.includes('yourproducts')){
+var cnt = 0
+
+if(!window.location.href.includes('products')){
     fetch("/productsdata/")
     .then(response => response.json())
     .then(data => {
@@ -16,19 +17,26 @@ if(!window.location.href.includes('yourproducts')){
             const stock = card.querySelector("[product-stock]")
             const rating = card.querySelector("[product-rating]")
             const offer = card.querySelector("[product-offer]")
+            const cart = card.querySelector("[product-cart]")
+
             /** Taking the image template of a single card */
             const cardImageContainer = card.querySelector("[card-image-container]")
             const imageTemplate = card.querySelector("[product-image-template]")
             /** Carousel indecator of the corresponding image */
             const carouselIndicatorContainer = card.querySelector("[indicators-container]")
             const carouselIndicatorTemplate = card.querySelector("[indicator-template]")
- 
+
             carouselSlide.id = "carousel" + product.PRODUCT_ID
- 
+            
             title.textContent = product.PRODUCT_NAME
             stock.textContent = 'In Stock: ' + product.STOCK_QUANTITY
-            rating.textContent = 'Rating: ' + product.PRODUCT_RATING
+            if(product.PRODUCT_RATING == 0){
+                rating.textContent = 'Rating: n/a'
+            }else{
+                rating.textContent = 'Rating: ' + product.PRODUCT_RATING
+            }
             offer.textContent = product.OFFER_PCT + '% OFF'
+
             let unit=''
             if(product.UNIT_ID==1){
                 unit='kg'
@@ -39,9 +47,9 @@ if(!window.location.href.includes('yourproducts')){
             else if(product.UNIT_ID==3){
                 unit='litre'
             }
- 
+
             priceRange.textContent = 'Tk . ' + product.PRODUCT_PRICE + ' / ' + product.FOR_UNIT + " " + unit
- 
+
             /** Iterate throgh all the images of a product */
             fetch("/productPhotosPath/" + product.PRODUCT_ID)
             .then(responsePath => responsePath.json())
@@ -71,15 +79,60 @@ if(!window.location.href.includes('yourproducts')){
                 element.setAttribute("data-bs-target", "#carousel" + product.PRODUCT_ID)
             })
             cardBody.onclick = function() {
-                console.log("Clicked")
+                //console.log("Clicked")
                 location.href = "/product-detail/" + product.PRODUCT_ID
             }
+            if(window.location.href.includes('searchstore')){
+                cart.removeAttribute("hidden"); 
+                const productCardsItemCount = document.querySelector("[item-count]");
+                const categoryId = document.getElementById('categoryid');
+                console.log(categoryId.value)
+                console.log(product.CATEGORY_ID)
+                if ((product.STOCK_QUANTITY!=0 && product.CATEGORY_ID==categoryId.value)){
+                    cnt = cnt + 1;
+                }
+                else{
+                    card.setAttribute("hidden", true);
+                }
+                if(cnt==0 || cnt==1){
+                    productCardsItemCount.textContent = cnt + " item found"
+                }
+                else{
+                    productCardsItemCount.textContent = cnt + " items found"
+                }
+            }
+            else if(window.location.href.includes('store')){
+                cart.removeAttribute("hidden"); 
+                const productCardsItemCount = document.querySelector("[item-count]");
+                const productName = document.getElementById('productname').value.trim()
+                if ((product.STOCK_QUANTITY!=0 && productName=="") || 
+                    (product.STOCK_QUANTITY!=0 && product.PRODUCT_NAME.toLowerCase().includes(productName.toLowerCase()))){
+                    cnt = cnt + 1;
+                }
+                else{
+                    card.setAttribute("hidden", true);
+                }
+                if(cnt==0 || cnt==1){
+                    productCardsItemCount.textContent = cnt + " item found"
+                }
+                else{
+                    productCardsItemCount.textContent = cnt + " items found"
+                }
+            }
+            //cart.setAttribute("href","{% url 'product-detail' "+ product.PRODUCT_ID + "%}")
+            cart.onclick = function() {
+                location.href = "/product-detail/" + product.PRODUCT_ID
+            }
+
             productCardsContainer.append(card)
+            if(product.STOCK_QUANTITY == 0){
+                card.setAttribute("hidden", true)
+            }
             return {
                     element: card
                 }
         })
- 
+
         $('.carousel').carousel({
             interval: false,
         });

@@ -1,6 +1,3 @@
-from math import prod
-from tkinter.messagebox import NO
-from unicodedata import category
 from django.shortcuts import render
 from supershop import definitions
 from django.db import connection

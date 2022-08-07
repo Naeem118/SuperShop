@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pages',
     'django.contrib.humanize',
+    'cart',
+    'accounts',
 ]
 
 MIDDLEWARE = [

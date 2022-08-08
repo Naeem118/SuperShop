@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Add Product | Admin
+{% endblock title %}
+
+{% block content %}
+    {% if request.session.is_host == 1 %}
+        <div class="container">
+            <div class="row justify-content-center">
+                <h1 class="text-center" style="margin-top: 15px;margin-bottom: 18px;">Add Product</h1>
+                <form style="max-width:70%" action="{% url 'addproduct' %}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('Are you sure all your information is correct? If yes, then click ok!!')">
+                    {% csrf_token %}
+                    {% include 'includes/messages.html' %}
+                    <div class="mb-3 row">
+                        <label for="productname" class="col-sm-2 col-form-label">Product Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="productname" name="productname" value="{{ productname }}" class="form-control" aria-describedby="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="categoryname" class="col-sm-2 col-form-label">Category Name</label>
+                        <div class="col-sm-10">
+                            <select class="form-control search-fields" name="categoryname" id="categoryname">
+                                <option selected="true" disabled="disabled">Category</option>
+                                {%for key, value in categories %}
+                                    <option value="{{ value }}">{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="unitname" class="col-sm-2 col-form-label">Product Unit</label>
+                        <div class="col-sm-10">
+                            <select class="form-control search-fields" name="unitname" id="unitname">
+                                <option selected="true" disabled="disabled">Unit</option>
+                                {%for unit in units %}
+                                    <option value="{{ unit }}">{{ unit }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="stockquantity" class="col-sm-2 col-form-label">Stock Quantity</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="1" id="stockquantity" name="stockquantity" value="{{ stockquantity }}" class="form-control" aria-describedby="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="price" class="col-sm-2 col-form-label">Price</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="0.1" id="price" name="price" value="{{ price }}" class="form-control" aria-describedby="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="description" class="col-sm-2 col-form-label">Description</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="description" name="description" value="{{ description }}" class="form-control" aria-describedby="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="offerpct" class="col-sm-2 col-form-label">Offer Pct</label>
+                        <div class="col-sm-10">
+                            <input type="number" step="0.1" id="offerpct" name="offerpct" value="{{ offerpct }}" class="form-control" aria-describedby="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="expiredate" class="col-sm-2 col-form-label">Expire Date</label>
+                        <div class="col-sm-10">
+                            <input type="date" id="expiredate" name="expiredate" value="{{ expiredate }}" class="form-control" aria-describedby="">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="upload1" class="col-sm-2 col-form-label">Product Photo:</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="upload1" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <button class="btn button-theme btn-md btn-success" type="submit" style="margin-left: 50%;">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="row justify-content-center">
+            <h3> You must be logged in to become a host!! </h3>
+        </div>
+    {% endif %}
+{% endblock content %}

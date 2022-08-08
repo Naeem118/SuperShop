@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %} Accounts | Signup {% endblock %}
+{% block includecss %}
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/signin.css' %}">
+{% endblock includecss %}
+
+{% block content %}
+
+<div class="container">
+    {% include 'includes/messages.html' %}
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                <h5 class="card-title text-center">Sign Up</h5>
+                    <form class="form-signin" method="POST">
+                        {% csrf_token %}  
+                        <div class="form-label-group">
+                            {% if email %}
+                                <input type="email" id="email" name="email" value="{{ email }}" class="form-control" aria-describedby="" required>
+                            {% else %}
+                                <input type="email" id="email" name="email" placeholder="username@gmail.com" class="form-control" aria-describedby="" required>
+                            {% endif %}
+                            <label for="email">Email*</label>
+                        </div>
+                        <div class="form-label-group">
+                            {% if phone %}
+                                <input type="tel" id="phonenumber" name="phonenumber" value="{{ phone }}" class="form-control" aria-describedby="" required>
+                            {% else %}
+                                <input type="tel" id="phonenumber" name="phonenumber" placeholder="01XXXXXXX" class="form-control" aria-describedby="" required>
+                            {% endif %}
+                            <label for="phonenumber">Phone No</label>
+                        </div>
+                        <div class="form-label-group">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="form-label-group">
+                            <input type="password" id="confirmpassword" name="confirmpassword" class="form-control" placeholder="Confirm Password" aria-describedby="" required>
+                            <label for="confirmpassword">Confirm Password</label>
+                        </div>
+                        <button class="btn btn-lg btn-create-acc btn-block text-uppercase" type="submit" value="submit">Create Account</button>
+                        <hr>
+                        <a class="btn btn-lg btn-primary btn-block text-uppercase" href="{% url 'adminsignin' %}">Sign In</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,6 +1,6 @@
 {% load static %}
 
-<header class="section-header">
+{% comment %} <header class="section-header">
     <nav class="navbar p-md-0 navbar-expand-sm navbar-light border-bottom">
         <div class="container">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,11 +18,11 @@
                 <ul class="navbar-nav">
                     <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
                     <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
-                </ul> <!-- list-inline //  -->
-            </div> <!-- navbar-collapse .// -->
-        </div> <!-- container //  -->
+                </ul>
+            </div>
+        </div>
     </nav>
-</header> <!-- section-header.// -->
+</header> {% endcomment %}
 
 <header class="section-header">
     <section class="header-main border-bottom">
@@ -61,8 +61,8 @@
                 </div> <!-- col.// -->
                 <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
                     <div class="d-flex justify-content-end mb-3 mb-lg-0">
-                        <div class="widget-header">
-                            {% if request.session.username %}
+                        <div class="widget-header" style="display: inline-flex; margin-top: 2%;">
+                            {% comment %} {% if request.session.username %}
                             <small class="title text-muted">Welcome {{ request.session.username }}!</small>
                                 <div> 
                                     <a href="{% url 'profile' %}">Profile</a> <span class="dark-transp"> | </span>
@@ -72,9 +72,53 @@
                                 <small class="title text-muted">Welcome guest!</small>
                                 <div> 
                                     <a href="{% url 'signin' %}">Sign in</a> <span class="dark-transp"> | </span>
-                                    <a href="{% url 'signup' %}"> Register</a>
+                                    <a href="{% url 'signup' %}"> Register</a> <span class="dark-transp"> | </span>
+                                    <a href="{% url 'signup' %}"> Admin</a>
                                 </div>
+                            {% endif %} {% endcomment %}
+                            {% if request.session.username %}
+                                <small class="title text-muted" style="margin-top: 4%; padding-right: 15px; font-size: 15px;">Welcome {{ request.session.username }}!</small>
+                            {% else %}
+                                {% if request.session.is_host == 1 %}
+                                    <small class="title text-muted" style="margin-top: 4%; padding-right: 15px; font-size: 15px;">Welcome Admin!</small>
+                                {% else %}
+                                    <small class="title text-muted" style="margin-top: 4%; padding-right: 15px; font-size: 15px;">Welcome guest!</small>
+                                {% endif %}
                             {% endif %}
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius:0 0 0.5rem 0.5rem ;">
+                                        <i class="fa fa-user" style="color: #F0F0F0"></i>
+                                        {% if request.session.profile_pic %}
+                                            <div class="profile-pic-container">
+                                                <img src="{{ request.session.profile_pic }}">
+                                            </div>
+                                        {% else %}
+                                            <div class="profile-pic-container">
+                                                <img src="{% static 'images/profile_pic_thumbnail.png' %}">
+                                            </div>
+                                        {% endif %}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-right navbar-ul" aria-labelledby="navbarDropdown" style="background: #282828;">
+                                        {% if request.session.username %}
+                                            <li><a href="{% url 'profile' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-user"></i>   {{ request.session.username }}</a></li>
+                                            <li><a href="{% url 'logout' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-sign-out"></i>   Logout</a></li>
+                                        {% else %}
+                                            {% if request.session.is_host == 1 %}
+                                                <li><a href="{% url 'addproduct' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-user"></i>  Add Item</a></li>
+                                                <li><a href="{% url 'logout' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-sign-out"></i>   Logout</a></li>
+                                            {% else %}
+                                                <li><a href="{% url 'signin' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-sign-in"></i>  Login</a></li>
+                                                <li><a href="{% url 'signup' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-user"></i>  Register</a></li> 
+                                                <li><a href="{% url 'adminsignin' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-sign-in"></i>  Admin Login</a></li>    
+                                                <li><a href="{% url 'adminsignup' %}" class="dropdown-item" role="button" style="color:#F0F0F0"><i class="fa fa-sign-out"></i>  Admin Register</a></li>              
+                                            {% endif %}
+                                        {% endif %}
+                                        <li><hr class="dropdown-divider" style="color:#F0F0F0"></li>
+                                        <li><a href="#" class="dropdown-item" role="button" style="color:#F0F0F0">Help</a></li> 
+                                    </ul>
+                                </li> 
+                            </ul>
                         </div>
                         <a href="./cart.html" class="widget-header pl-3 ml-3">
                             <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>

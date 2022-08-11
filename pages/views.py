@@ -81,6 +81,7 @@ def product_detail(request, product_id):
     
     data = {
         #'product_name': name,
+        'product_id': product_id,
         'product_category': category_name,
         'product_stock': stock,
         #'product_offer': offer,

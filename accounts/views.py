@@ -50,14 +50,26 @@ def is_productname_unique(prod_name):
     
     return True
 
-def IsHouseInputsValid(request,categoryname,unitname,productname,stockquantity,price,offerpct,description,expiredate):
+def IsEditProductInputsValid(request,categoryname,unitname,stockquantity,price,offerpct,description,forunit):
     if categoryname=="Category":
         messages.error(request,'Please select a category!!')
         return False
     elif unitname=="Unit":
         messages.error(request,'Please select a product unit!!')
         return False
-    elif productname=="" or stockquantity=="" or price=="" or offerpct=="" or description=="" or expiredate=="":
+    elif stockquantity=="" or price=="" or offerpct=="" or description=="" or forunit=="":
+        messages.error(request,'Please fill up all the field!!')
+        return False
+    return True
+
+def IsProductInputsValid(request,categoryname,unitname,productname,stockquantity,price,offerpct,description,expiredate,forunit):
+    if categoryname=="Category":
+        messages.error(request,'Please select a category!!')
+        return False
+    elif unitname=="Unit":
+        messages.error(request,'Please select a product unit!!')
+        return False
+    elif productname=="" or stockquantity=="" or price=="" or offerpct=="" or description=="" or expiredate=="" or forunit=="":
         messages.error(request,'Please fill up all the field!!')
         return False
     elif not request.FILES.get('upload1',False):
@@ -82,7 +94,7 @@ def IsSignUpInputsValid(request, firstname, lastname, phonenumber, email, userna
         messages.error(request,'Please give your phone number!!')
         return False
     
-def IsSignUpInputsValid(request, phonenumber, email):
+def IsAdminSignUpInputsValid(request, phonenumber, email):
     if email==NULL or email=="":
         messages.error(request,'Please input your email!!')
         return False
@@ -203,7 +215,7 @@ def adminsignup(request):
             'phone': phone[0],
         })
         
-        if IsSignUpInputsValid(request, phone, email) == False:
+        if IsAdminSignUpInputsValid(request, phone, email) == False:
             return render(request, "accounts/adminsignup.html", data)
         
         password1 = request.POST.get('password')
@@ -395,12 +407,13 @@ def addproduct(request):
     datas ={
         'categories': None,
         'units': None,
-        'productname': None,
+        'productname': "",
         'stockquantity': None,
-        'description': None,
+        'description': "",
         'price': None,
         'offerpct':  None,
         'expiredate': None,
+        'forunit': None
     }
     cursor = connection.cursor()
     query = """SELECT CATEGORY_NAME, CATEGORY_ID FROM PRODUCT_CATEGORY"""
@@ -437,9 +450,10 @@ def addproduct(request):
             'offerpct': request.POST.get('offerpct',""),
             'description': request.POST.get('description',""),
             'expiredate': request.POST.get('expiredate',""),
+            'forunit': request.POST.get('forunit',""),
         })
-        if IsHouseInputsValid(request,categoryname,unitname,datas['productname'],datas['stockquantity'],datas['price'],
-                              datas['offerpct'],datas['description'],datas['expiredate']) == False:
+        if IsProductInputsValid(request,categoryname,unitname,datas['productname'],datas['stockquantity'],datas['price'],
+                              datas['offerpct'],datas['description'],datas['expiredate'],datas['forunit']) == False:
             return render(request,'accounts/addproduct.html',datas)
         elif is_productname_unique(datas['productname']) == False:
             messages.error(request, 'Please give an unique product name!!')
@@ -465,8 +479,8 @@ def addproduct(request):
                                         DESCRIPTION, PRODUCT_PRICE, OFFER_PCT, EXPIRE_DATE,
                                         PRODUCT_RATING, FOR_UNIT) 
                                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-        cursor.execute(query, [datas['productname'], str(unit_id), str(category_id), datas['stockquantity'],
-                               datas['description'],datas['price'],datas['offerpct'],datas['expiredate'],str(0), str(0)])
+        cursor.execute(query, [datas['productname'], str(unit_id), str(category_id), str(int(datas['stockquantity'])),
+                               datas['description'],datas['price'],datas['offerpct'],datas['expiredate'],str(0), str(int(datas['forunit']))])
         
         query = "SELECT PRODUCT_ID FROM PRODUCTS WHERE PRODUCT_NAME=%s"
         cursor.execute(query,[datas['productname']])
@@ -486,3 +500,118 @@ def addproduct(request):
 
         cursor.close()
         return redirect('home')
+    
+def editproductinfo(request,product_id):
+    datas ={
+        'productid': str(product_id),
+        'categories': None,
+        'units': None,
+        'productname': "",
+        'stockquantity': None,
+        'description': "",
+        'price': None,
+        'offerpct':  None,
+        'expiredate': None,
+        'forunit': None
+    }
+    
+    cursor = connection.cursor()
+    query = """SELECT CATEGORY_NAME, CATEGORY_ID FROM PRODUCT_CATEGORY"""
+    cursor.execute(query)
+    result = definitions.dictfetchall(cursor)
+    categories = {}
+    for category in result:
+        categories[category['CATEGORY_ID']] = category['CATEGORY_NAME']
+    
+    query = """SELECT UNIT_NAME FROM PRODUCT_UNIT"""
+    cursor.execute(query)
+    result1 = cursor.fetchall()
+    result1 = [unit[0] for unit in result1]
+    datas.update({
+        'categories': categories.items(),
+        'units': result1,
+    })
+    
+    query="""SELECT PRODUCT_ID, PRODUCT_NAME, DESCRIPTION, STOCK_QUANTITY, PRODUCT_PRICE,
+                OFFER_PCT, FOR_UNIT, EXPIRE_DATE
+            FROM PRODUCTS
+            WHERE PRODUCT_ID=%s"""
+    cursor.execute(query,[str(product_id)])
+    result = definitions.dictfetchone(cursor)
+
+    if not bool(result):
+            messages.error(request, 'Can\'t find the product!!')
+            cursor.close()
+            return redirect('store')
+
+    productid = result["PRODUCT_ID"]
+    productname = result["PRODUCT_NAME"]
+    description = result["DESCRIPTION"]
+    stockquantity = result["STOCK_QUANTITY"]
+    productprice = result["PRODUCT_PRICE"]
+    offerpct = result["OFFER_PCT"]
+    forunit = result["FOR_UNIT"]
+    expiredate = result["EXPIRE_DATE"]
+    query="""SELECT PATH FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
+    cursor.execute(query,[str(product_id)])
+    result = cursor.fetchall()
+    photos_path = [photo[0] for photo in result]
+    datas.update({
+        'productid': str(productid),
+        'productname': productname,
+        'stockquantity': stockquantity,
+        'description': description,
+        'price': productprice,
+        'offerpct' : offerpct,
+        'forunit': forunit,
+        'expiredate': expiredate,
+        'photos_url': photos_path,
+    })
+    #print(datas)
+    if request.method=="POST":
+        if request.POST.get('deletedImg',False):
+            path = request.POST.get('deletedImg',False)
+            query="""DELETE FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s AND PATH=%s"""
+            cursor.execute(query,[str(product_id),str(path)]) 
+            query="""SELECT PATH FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
+            cursor.execute(query,[str(product_id)])
+            result = cursor.fetchall()
+            photos_path = [photo[0] for photo in result]
+            datas.update({
+                'photos_url': photos_path,
+            })
+        else:
+            categoryname = request.POST.get('categoryname','Category')
+            unitname = request.POST.get('unitname','Unit')
+            
+            datas.update({
+                'stockquantity': request.POST.get('stockquantity',""),
+                'price': request.POST.get('price',""),
+                'offerpct': request.POST.get('offerpct',""),
+                'description': request.POST.get('description',""),
+                'forunit': request.POST.get('forunit',""),
+            })
+            
+            if IsEditProductInputsValid(request,categoryname,unitname,datas['stockquantity'],datas['price'],
+                                datas['offerpct'],datas['description'],datas['forunit']) == False:
+                return render(request,'accounts/editproduct.html',datas)
+            
+            cursor = connection.cursor()
+            query = "SELECT UNIT_ID FROM PRODUCT_UNIT WHERE UNIT_NAME=%s"
+            cursor.execute(query, [unitname])
+            result = definitions.dictfetchone(cursor)
+            unit_id = result['UNIT_ID']
+            
+            query = "SELECT CATEGORY_ID FROM PRODUCT_CATEGORY WHERE CATEGORY_NAME=%s"
+            cursor.execute(query, [categoryname])
+            result = definitions.dictfetchone(cursor)
+            category_id = result['CATEGORY_ID']
+            print(datas['offerpct'])
+            query="""UPDATE PRODUCTS SET CATEGORY_ID=%s, UNIT_ID=%s, STOCK_QUANTITY=%s,
+                    PRODUCT_PRICE=%s,OFFER_PCT=%s,FOR_UNIT=%s, DESCRIPTION=%s 
+                    WHERE PRODUCT_ID=%s"""
+            cursor.execute(query,[str(category_id), str(unit_id) , str(int(datas['stockquantity'])), datas['price'],
+                                  datas['offerpct'], str(int(datas['forunit'])),datas['description'],str(productid)])
+    
+    cursor.close()
+    return render(request,'accounts/editproduct.html',datas)

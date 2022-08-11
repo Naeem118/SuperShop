@@ -12,4 +12,5 @@ urlpatterns = [
     path('store/', views.store, name='store'),
     path('store/<str:prod_name>', views.store, name='store'),
     path('searchstore/<int:category_id>', views.searchstore, name='searchstore'),
+    path('fetch_no_of_product_pics/<int:product_id>/', views.fetch_no_of_product_pics, name='fetch_no_of_product_pics'),
 ]

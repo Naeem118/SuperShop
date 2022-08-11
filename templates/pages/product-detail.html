@@ -124,6 +124,7 @@
                       <!-- Heading start -->
                       <div class="heading-car clearfix">
                           <div class="pull-left">
+                              <input type="text" name="productid" id="productid" value="{{ product_id }}" hidden>
                               <h3>{{ product.PRODUCT_NAME }}</h3>
                               <h6>
                                 <i class="fa fa-list-alt" aria-hidden="true"></i> {{ product_category }}
@@ -231,22 +232,26 @@
                       <div class="widget advanced-search d-none-992">
                         {% if request.session.is_host == 1 %}
                         <!-- Advanced search start -->
-                          <form action="{% url 'store' %}" method="post" id="udform">
+                          {% comment %} <form action="{% url 'store' %}" method="post" id="udform"> {% endcomment %}
+                          <form action="{% url 'product-detail' product_id %}" method="post" id="udform" onsubmit="return confirm('Do you want to delete this product? If yes, then click ok!!')">
                             {% csrf_token %}
+                            {% comment %} <button class="btn btn-outline-danger bomd btn-block btn-lg" data-toggle="modal" style="margin-bottom: 15px;"
+                            type="submit" value="submit" onclick="onUDClickProduct('Delete Product','Are you sure you want to delete this product?You can\'t undo this request!!','{{csrf_token}}','delproduct','/pages/product-detail/{{product_id}}/','{{product_id}}')">Delete This Product</button> {% endcomment %}
+                            <input type="text" id="delprod" name="delprod" value="YES" class="form-control" aria-describedby="" hidden>
                             <button class="btn btn-outline-danger bomd btn-block btn-lg" data-toggle="modal" style="margin-bottom: 15px;"
-                            type="submit" value="submit" onclick="onUDClickHouse('Delete Product','Are you sure you want to delete this product?You can\'t undo this request!!','{{csrf_token}}','delproduct','/accounts/product_detail/{{product_id}}/','{{product_id}}')">Delete This Product</button>
+                            type="submit" value="submit">Delete This Product</button>
                           </form>
                           <form action="{% url 'editproductinfo' product_id %}" style="margin-bottom: 15px;"">
                             <button class="btn btn-outline-success bomd btn-block btn-lg" data-toggle="modal" type="submit"">Edit Product Info</button>
                           </form>
-                          <button class="btn btn-outline-success bomd btn-block btn-lg" data-toggle="modal" type="submit" id="addHousePicBtn" style="margin-bottom:15px;">Add House Pic</button>
-                          <form action="{% url 'home' %}" method="POST" enctype="multipart/form-data">
+                          <button class="btn btn-outline-success bomd btn-block btn-lg" data-toggle="modal" type="submit" id="addProductPicBtn" style="margin-bottom:15px;">Add Product Pic</button>
+                          <form action="{% url 'product-detail' product_id %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
-                            <div id="addHousePic">
+                            <div id="addProductPic">
 
                             </div>
                             <h4 style="width:100%; text-align: center; display:none; color: #198754;" id="picLimit">You reached picture limit!!</h4>
-                            <button class="btn btn-block btn-lg btn-theme btn-success"  style="width: 25%; height:50px; margin: auto; display: none;" id="addBtnHouse">Add</button>
+                            <button class="btn btn-block btn-lg btn-theme btn-success"  style="width: 25%; height:40px; margin: auto; display: none; margin-bottom:10px;" id="addBtnProduct">Add</button>
                           </form>
                         {% endif %}
                           <h3 class="sidebar-title searchRefine">Refine Your Search</h3>

@@ -1,7 +1,12 @@
-from django.shortcuts import render
+import re
+from traceback import print_tb
+from django.shortcuts import render, redirect
 from supershop import definitions
 from django.db import connection
 from django.http import JsonResponse
+from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
+from supershop.settings import MEDIA_ROOT
 
 # Create your views here.
 
@@ -67,10 +72,6 @@ def product_detail(request, product_id):
     cursor.execute(query, [result["CATEGORY_ID"]])
     result_cat = definitions.dictfetchone(cursor)
     category_name = result_cat["CATEGORY_NAME"]
-    query = """SELECT PATH FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
-    cursor.execute(query,[product_id])
-    result_photos = cursor.fetchall()
-    photos_path = [photo[0] for photo in result_photos]
     
     query = """SELECT FIRST_NAME, REVIEW, 
             PROFILE_PIC, REVIEW_DATE
@@ -90,10 +91,88 @@ def product_detail(request, product_id):
         #'product_desc': description,
         #'product_exp': exp_date,
         'product' : result,
-        'photos': photos_path,
         'reviews': reviews,
     }
+    cursor = connection.cursor()
+    query = """SELECT PATH FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
+    cursor.execute(query,[product_id])
+    result_photos = cursor.fetchall()
+    photos_path = [photo[0] for photo in result_photos]
+    
+    data.update({
+        'photos': photos_path
+    })
+    print("Ei porjonto aise")
+    if request.method=='POST': #and request.POST.get('YES', False) and request.POST.get('YES',False)=='delproduct':
+        print("Ei porjonto aise 4")
+        delprod=request.POST.get('delprod',"")
+        print("delprod is: "+delprod)
+        if delprod=="YES":
+            print("Ei porjonto aise 1")
+            print("Product id is: "+ str(product_id))
+            #canDelete = cursor.callfunc('GET_LAST_DATE_HOUSE', bool, [houseid])
+            canDelete = False
+            query = """SELECT CART_ID FROM CART WHERE PRODUCTS_ID=%s"""
+            cursor.execute(query, [str(product_id)])
+            result = definitions.dictfetchone(cursor)
+            print(result)
+            if not bool(result):
+                canDelete = True
+            if canDelete==True:
+                query="""DELETE FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
+                cursor.execute(query,[str(product_id)])
+                query="""DELETE FROM PRODUCT_REVIEW WHERE PRODUCT_ID=%s"""
+                cursor.execute(query,[str(product_id)])
+                query="""DELETE FROM PRODUCTS WHERE PRODUCT_ID=%s"""
+                cursor.execute(query,[str(product_id)])
+                #return JsonResponse({'url': '/store/'})
+                return redirect('store')
+            else:
+                messages.error(request,"Some users have already aded your product in their cart. Can\'t delete the Product!!")
+                #return JsonResponse({'url': '/pages/product_detail/'+str(productid)}) 
+                return render(request, 'pages/product-detail.html', data)
+        else:
+            print("Ei porjonto aise 2")
+            cursor = connection.cursor()
+            query = """SELECT COUNT(*) FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
+            cursor.execute(query,[str(product_id)])
+            result = cursor.fetchone()
+            for i in range(result[0],6):
+                if request.FILES.get('upload'+str(i),False):
+                    folder = MEDIA_ROOT + '/Products/' + str(product_id) + '/ProductPic/'
+                    upload = request.FILES['upload'+str(i)]
+                    fss = FileSystemStorage(location=folder)
+                    file = fss.save(upload.name, upload)
+                    photoPath = '/media/Products/' + str(product_id) + '/ProductPic/'+upload.name
+                    file_url = fss.url(file)
+                    query = """INSERT INTO PRODUCT_PHOTOS_PATH VALUES (%s, %s)"""
+                    cursor.execute(query, [str(product_id), photoPath])
+    query = """SELECT PATH FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"""
+    cursor.execute(query,[product_id])
+    result_photos = cursor.fetchall()
+    photos_path = [photo[0] for photo in result_photos]
+    
+    data.update({
+        'photos': photos_path
+    })
     return render(request, 'pages/product-detail.html', data)
+    
+
+def fetch_no_of_product_pics(request, product_id):
+    print("Ashche eikhane")
+    cursor = connection.cursor()
+    if request.session['is_host']!=1:
+            messages.error(request, 'Please login to admin account!!')
+            cursor.close()
+            return redirect('adminsignin')
+
+    query = "SELECT PATH FROM PRODUCT_PHOTOS_PATH WHERE PRODUCT_ID=%s"
+    cursor.execute(query,[str(product_id)])
+    photos_paths = definitions.dictfetchall(cursor)
+
+    result = [len(photos_paths)]
+    cursor.close()
+    return JsonResponse(result, safe=False)
 
 def store(request, prod_name=None):
     cursor = connection.cursor()

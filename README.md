@@ -15,7 +15,7 @@ A website built with django and Mysql database
  # **Team Members**
 ---------------
 1. **Golam Mostofa Naeem**             
-  Department of Computer Science and Engineering
+  Department of Computer Science and Engineering<br>
   Shahjalal University of Science and Technology       
 - Reg No: 2018331118
 

@@ -1,5 +1,5 @@
 # SuperShop Management System
-A website built with django and Mysql database
+- A website built with Django and MySQL databases
 # Using Tools & Technology :
 - HTML
 - CSS
